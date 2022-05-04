@@ -223,7 +223,6 @@ public class LisaaPalvelu extends JFrame {
 	private static Object[] alueLista () {
 		List<String> alueet = new ArrayList<>();
 		alueet.add("");
-		int id;
 		String alue;
 		try {
 	        Connection con=Palveluntarjoaja.getCon();
@@ -231,7 +230,6 @@ public class LisaaPalvelu extends JFrame {
 	        ResultSet resultSet = st.executeQuery("Select * from alue order by alue_id");
 	        while (resultSet.next())
 	        {
-	        id = Integer.parseInt(resultSet.getString("alue_id"));
 	        alue = resultSet.getString("nimi");
 	        alueet.add(alue);
 	        }
