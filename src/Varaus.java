@@ -1,5 +1,9 @@
 import java.time.LocalDate;
 
+/**
+ * 
+ * @author ilta
+ */
 public class Varaus {
 	private int id;
 	private LocalDate pvm;
