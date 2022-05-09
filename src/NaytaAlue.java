@@ -1,3 +1,5 @@
+package mökinvaraus;
+
 
 import OTI_Projekti.Palveluntarjoaja;
 import java.sql.*;
@@ -7,14 +9,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-
-
 /**
- *
+ * Luokka, jolla voi tarkastella alueita
  * @author Matias
  */
 public class NaytaAlue extends javax.swing.JFrame {
@@ -28,6 +24,11 @@ public class NaytaAlue extends javax.swing.JFrame {
         initComponents();
     }
     
+    /**
+     * Alustaja alueen tiedoilla
+     * @param id    Alueen ID
+     * @param alue  Alueen nimi
+     */
     public NaytaAlue(int id, String alue){
         this.id = id;
         this.alue = alue;
@@ -117,6 +118,10 @@ public class NaytaAlue extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * ToString-metodi, joka palauttaa alueen ID:n ja nimen listaa varten.
+     * @return 
+     */
     @Override
     public String toString(){
         return "Alue ID: "+ this.id+ ", Alueen nimi: "+ this.alue;
@@ -155,17 +160,17 @@ public class NaytaAlue extends javax.swing.JFrame {
     }
     
     private void jList1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jList1AncestorAdded
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jList1AncestorAdded
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
         setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            // TODO add your handling code here:
+            
             populateJList(jList1, "Select * from alue order by alue_id");
         } catch (SQLException ex) {
             Logger.getLogger(NaytaAlue.class.getName()).log(Level.SEVERE, null, ex);

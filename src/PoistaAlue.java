@@ -1,14 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+package mökinvaraus;
 
+
+import mökinvaraus.LisaaAlue;
 import java.sql.*;
 import OTI_Projekti.Palveluntarjoaja;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Luokka, joka mahdollistaa alueiden poistamisen
  * @author Matias
  */
 public class PoistaAlue extends javax.swing.JFrame {
@@ -104,9 +103,12 @@ public class PoistaAlue extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Poistaa alueen tietokannasta
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        
         int alueID = Integer.parseInt(jTextField1.getText());
         
         try
@@ -127,12 +129,12 @@ public class PoistaAlue extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
         setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
