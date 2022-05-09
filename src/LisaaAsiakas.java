@@ -1,5 +1,9 @@
 import java.sql.*;
+import java.sql.Connection;
 import OTI_Projekti.Palveluntarjoaja;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -48,6 +52,7 @@ public class LisaaAsiakas extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
 
         jLabel1.setText("Asiakas ID:");
 
@@ -63,6 +68,12 @@ public class LisaaAsiakas extends javax.swing.JFrame {
 
         jLabel7.setText("Puhelinnumero:");
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("Tallenna");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -73,6 +84,11 @@ public class LisaaAsiakas extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton2.setText("Sulje");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Lisää asiakas");
@@ -102,14 +118,13 @@ public class LisaaAsiakas extends javax.swing.JFrame {
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                                 .addComponent(jButton2))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField1)
-                                .addComponent(jTextField2)
-                                .addComponent(jTextField3)
-                                .addComponent(jTextField7)
-                                .addComponent(jTextField6)
-                                .addComponent(jTextField5)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField1)
+                            .addComponent(jTextField2)
+                            .addComponent(jTextField3)
+                            .addComponent(jTextField7)
+                            .addComponent(jTextField6)
+                            .addComponent(jTextField5)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(72, 72, 72))))
         );
         layout.setVerticalGroup(
@@ -160,15 +175,35 @@ public class LisaaAsiakas extends javax.swing.JFrame {
         String etunimi=jTextField2.getText();
         String sukunimi=jTextField3.getText();
         String sahkoposti=jTextField4.getText();
-        String lahiosoite=jTextField5.getText();
-        String puhelinnumero=jTextField6.getText();
+        String postinumero = jTextField5.getText();
+        String lahiosoite=jTextField6.getText();
+        String puhelinnumero=jTextField7.getText();
         
         try {
             Connection con=Palveluntarjoaja.getCon();
             Statement st=con.createStatement();
-            st.executeUpdate("Lisää asiakkaan tietoihin('")");
+            st.executeUpdate("Insert into asiakas values('"+asiakasID+"','"+postinumero+"', '"+etunimi+"', '"+sukunimi+"', '"+lahiosoite+"', '"+sahkoposti+"', '"+puhelinnumero+"')");
+            JOptionPane.showMessageDialog(null, "Tiedot lisättiin onnistuneesti.");
+            setVisible(false);
+            new LisaaAsiakas().setVisible(true);
+            
+        } catch (SQLException ex) {
+             JOptionPane.showMessageDialog(null, "Virhe");
+            setVisible(false);
+            new LisaaAsiakas().setVisible(true);
+            Logger.getLogger(LisaaAsiakas.class.getName()).log(Level.SEVERE, null, ex);
         }
+ 
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
