@@ -1,6 +1,5 @@
 package mökinvaraus;
 
-
 import OTI_Projekti.Palveluntarjoaja;
 import java.sql.*;
 import java.util.logging.Level;
@@ -8,34 +7,53 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 /**
- * Luokka, jolla voi tarkastella alueita
+ * Luokka mökkien tietojen lukemiselle
  * @author Matias
  */
-public class NaytaAlue extends javax.swing.JFrame {
+public class NaytaMokki extends javax.swing.JFrame {
+
+    private int mokki_id;
+    private int alue_id;
+    private String pnro;
+    private String nimi;
+    private String osoite;
+    private double hinta;
+    private String kuvaus;
+    private int hlo;
+    private String varustelu;
+            
     
-    private int id;
-    private String alue;
     /**
-     * Creates new form NaytaAlue
+     * Creates new form NaytaMokki
      */
-    public NaytaAlue() {
+    public NaytaMokki() {
         initComponents();
     }
-    
-    /**
-     * Alustaja alueen tiedoilla
-     * @param id    Alueen ID
-     * @param alue  Alueen nimi
-     */
-    public NaytaAlue(int id, String alue){
-        this.id = id;
-        this.alue = alue;
-    }
 
-    
-    
+    /**
+     * Alustaja mökin tiedoilla
+     * @param mokki_id
+     * @param alue_id
+     * @param pnro
+     * @param nimi
+     * @param osoite
+     * @param hinta
+     * @param kuvaus
+     * @param hlo
+     * @param varustelu 
+     */
+    public NaytaMokki(int mokki_id, int alue_id, String pnro, String nimi, String osoite, double hinta, String kuvaus, int hlo, String varustelu){
+        this.mokki_id = mokki_id;
+        this.alue_id = alue_id; 
+        this.pnro = pnro;
+        this.nimi = nimi;
+        this.osoite = osoite;
+        this.hinta = hinta;
+        this.kuvaus = kuvaus;
+        this.hlo = hlo;
+        this.varustelu = varustelu;    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,16 +64,13 @@ public class NaytaAlue extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setText("Alueet");
 
         jList1.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
@@ -82,6 +97,9 @@ public class NaytaAlue extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("Mökit");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,42 +107,42 @@ public class NaytaAlue extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(248, 248, 248)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(310, 310, 310)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(259, 259, 259)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addContainerGap(249, Short.MAX_VALUE))
+                        .addGap(335, 335, 335)
+                        .addComponent(jLabel3)))
+                .addContainerGap(40, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(282, 282, 282))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton1))
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
     /**
-     * ToString-metodi, joka palauttaa alueen ID:n ja nimen listaa varten.
+     * ToString-metodi, joka palauttaa mökin tiedot listaa varten
      * @return String
      */
     @Override
     public String toString(){
-        return "Alue ID: "+ this.id+ ", Alueen nimi: "+ this.alue;
+        return "Mökki ID: "+this.mokki_id+", Alue ID: "+ this.alue_id+", Postinumero: "+this.pnro+ ", Mökin nimi: "+ this.nimi+", Katuosoite: "+this.osoite+", Hinta: "+this.hinta+", Kuvaus: "+this.kuvaus+", Henkilömäärä: "+this.hlo+", Varustelu: "+this.varustelu;
     }
     /**
      * Metodi listan täyttämiseen
@@ -144,10 +162,18 @@ public class NaytaAlue extends javax.swing.JFrame {
 
             while (resultSet.next())
             {
-            id = Integer.parseInt(resultSet.getString("alue_id"));
-            alue = resultSet.getString("nimi");
-            NaytaAlue alue1 = new NaytaAlue(id, alue);
-            model.addElement(alue1.toString());
+            mokki_id = Integer.parseInt(resultSet.getString("mokki_id"));
+            alue_id = Integer.parseInt(resultSet.getString("alue_id"));
+            pnro = resultSet.getString("postinro");
+            nimi = resultSet.getString("mokkinimi");
+            osoite = resultSet.getString("katuosoite");
+            hinta = Double.parseDouble(resultSet.getString("hinta"));
+            kuvaus = resultSet.getString("kuvaus");
+            hlo = Integer.parseInt(resultSet.getString("henkilomaara"));
+            varustelu = resultSet.getString("varustelu");
+            
+            NaytaMokki mokki1 = new NaytaMokki(mokki_id, alue_id, pnro, nimi, osoite, hinta, kuvaus, hlo, varustelu);
+            model.addElement(mokki1.toString());
             }
             list.setModel(model);
             resultSet.close();
@@ -157,19 +183,19 @@ public class NaytaAlue extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(null, "Tietojen hakemisessa tapahtui virhe");
             setVisible(false);
-            new NaytaAlue().setVisible(true);
+            new NaytaMokki().setVisible(true);
         }
 
         
 
     }
-    
-    private void jList1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jList1AncestorAdded
         
+    private void jList1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jList1AncestorAdded
+
     }//GEN-LAST:event_jList1AncestorAdded
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+
         setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
     /**
@@ -178,8 +204,8 @@ public class NaytaAlue extends javax.swing.JFrame {
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            
-            populateJList(jList1, "Select * from alue order by alue_id");
+
+            populateJList(jList1, "Select * from mokki order by mokki_id");
         } catch (SQLException ex) {
             Logger.getLogger(NaytaAlue.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -202,20 +228,20 @@ public class NaytaAlue extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NaytaAlue.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NaytaMokki.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NaytaAlue.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NaytaMokki.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NaytaAlue.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NaytaMokki.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NaytaAlue.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NaytaMokki.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NaytaAlue().setVisible(true);
+                new NaytaMokki().setVisible(true);
             }
         });
     }
