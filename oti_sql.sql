@@ -4,12 +4,6 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
-alter table varaus modify varattu_pvm varchar(10);
-alter table varaus modify vahvistus_pvm varchar(10);
-alter table varaus modify varattu_alkupvm varchar(10);
-alter table varaus modify varattu_loppupvm varchar(10);
-DESCRIBE varaus;
-
 
 -- -----------------------------------------------------
 -- Schema vn
@@ -133,6 +127,12 @@ CREATE TABLE IF NOT EXISTS `vn`.`varaus` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+alter table varaus modify varattu_pvm varchar(10);
+alter table varaus modify vahvistus_pvm varchar(10);
+alter table varaus modify varattu_alkupvm varchar(10);
+alter table varaus modify varattu_loppupvm varchar(10);
+DESCRIBE varaus;
 
 
 -- -----------------------------------------------------
