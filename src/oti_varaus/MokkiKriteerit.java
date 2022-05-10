@@ -46,6 +46,7 @@ public class MokkiKriteerit extends JFrame {
 	private static int alue = 0; 
 	protected static Date alkuPaiva = haeAlkuPaiva();
 	protected static Date loppuPaiva = haeLoppuPaiva();
+	public static SimpleDateFormat s = new SimpleDateFormat("dd.MM.yyyy");
 	
 	private static Object[] paivat = paivat();
 	private static Object[] kuut = kuut();
@@ -60,12 +61,12 @@ public class MokkiKriteerit extends JFrame {
 	private static JPanel contentPane;
 	private static JTextField txtTeksti;
 	
-	JComboBox comboBox;
-	JComboBox comboBox_1;
-	JComboBox comboBox_2;
-	JComboBox comboBox_3;
-	JComboBox comboBox_4;
-	JComboBox comboBox_4_1;
+	JComboBox<Object> comboBox;
+	JComboBox<Object> comboBox_1;
+	JComboBox<Object> comboBox_2;
+	JComboBox<Object> comboBox_3;
+	JComboBox<Object> comboBox_4;
+	JComboBox<Object> comboBox_4_1;
 	
 	private static String p1 = "01";
 	private static String p2 = "01";
@@ -73,8 +74,8 @@ public class MokkiKriteerit extends JFrame {
 	private static String k2 = "01";
 	private static String v1 = "2022";
 	private static String v2 = "2022";
-	private static JComboBox comboBox_4_2;
-	private static JComboBox comboBox_4_3;
+	private static JComboBox<Object> comboBox_4_2;
+	private static JComboBox<Integer> comboBox_4_3;
 	
 
 	/**
@@ -148,64 +149,64 @@ public class MokkiKriteerit extends JFrame {
 		
 		JLabel lblNewLabel_4 = new JLabel("Henkilömäärä");
 		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(paivat));
+		comboBox = new JComboBox<Object>();
+		comboBox.setModel(new DefaultComboBoxModel<Object>(paivat));
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				p1 = comboBox.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(paivat));
+		comboBox_1 = new JComboBox<Object>();
+		comboBox_1.setModel(new DefaultComboBoxModel<Object>(paivat));
 		comboBox_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				p2 = comboBox_1.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_2 = new JComboBox();
-		comboBox_2.setModel(new DefaultComboBoxModel(kuut));
+		comboBox_2 = new JComboBox<Object>();
+		comboBox_2.setModel(new DefaultComboBoxModel<Object>(kuut));
 		comboBox_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				k1 = comboBox_2.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_3 = new JComboBox();
-		comboBox_3.setModel(new DefaultComboBoxModel(kuut));
+		comboBox_3 = new JComboBox<Object>();
+		comboBox_3.setModel(new DefaultComboBoxModel<Object>(kuut));
 		comboBox_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				k2 = comboBox_3.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_4 = new JComboBox();
-		comboBox_4.setModel(new DefaultComboBoxModel(vuodet));
+		comboBox_4 = new JComboBox<Object>();
+		comboBox_4.setModel(new DefaultComboBoxModel<Object>(vuodet));
 		comboBox_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				v1 = comboBox_4.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_4_1 = new JComboBox();
-		comboBox_4_1.setModel(new DefaultComboBoxModel(vuodet));
+		comboBox_4_1 = new JComboBox<Object>();
+		comboBox_4_1.setModel(new DefaultComboBoxModel<Object>(vuodet));
 		comboBox_4_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				v2 = comboBox_4_1.getSelectedItem().toString();
 			};
 		});
 		
-		comboBox_4_2 = new JComboBox();
-		comboBox_4_2.setModel(new DefaultComboBoxModel(TeeVaraus.alueLista));
+		comboBox_4_2 = new JComboBox<Object>();
+		comboBox_4_2.setModel(new DefaultComboBoxModel<Object>(TeeVaraus.alueLista));
 		comboBox_4_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				alue = comboBox_4_2.getSelectedIndex();
 			};
 		});
 		
-		comboBox_4_3 = new JComboBox();
-		comboBox_4_3.setModel(new DefaultComboBoxModel(asukkaita));
+		comboBox_4_3 = new JComboBox<Integer>();
+		comboBox_4_3.setModel(new DefaultComboBoxModel<Integer>(asukkaita));
 		comboBox_4_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e ) {
 				String a = comboBox_4_3.getSelectedItem().toString();
@@ -333,8 +334,10 @@ public class MokkiKriteerit extends JFrame {
 	}
 	
 	private static void haeVaraukset() {
-		Date alku;
-		Date loppu;
+		String alku;
+		String loppu;
+		Date a;
+		Date b;
 		int id;
 		varatutMokit.clear();
 		
@@ -343,13 +346,21 @@ public class MokkiKriteerit extends JFrame {
 	        Statement st = con.createStatement();
 	        ResultSet resultSet = st.executeQuery("Select * from varaus order by varaus_id");
 	        while (resultSet.next()) {
-	        	alku = resultSet.getDate("varattu_alkupvm");
-	        	loppu = resultSet.getDate("varattu_loppupvm");
-	        	if (alku!=null && loppu!=null) {
-		        	if ((alku.after(alkuPaiva)&&alku.before(loppuPaiva))||(loppu.after(alkuPaiva)&&loppu.before(loppuPaiva))) {
-		        		id = resultSet.getInt("mokki_mokki_id");
-		        		varatutMokit.add(id);
-	        		} } } }
+	        	alku = resultSet.getString("varattu_alkupvm");
+	        	loppu = resultSet.getString("varattu_loppupvm");
+	        	
+	        	try {
+					a = s.parse(alku);
+					b = s.parse(loppu);
+					
+					if (alku!=null && loppu!=null) {
+			        	if ((a.after(alkuPaiva)&&a.before(loppuPaiva))||(b.after(alkuPaiva)&&b.before(loppuPaiva))) {
+			        		id = resultSet.getInt("mokki_mokki_id");
+			        		varatutMokit.add(id);
+			        	}}}
+	        	catch (ParseException e) {
+					e.printStackTrace();
+				}}}
 		catch (SQLException ex) {}
 	}
 	
@@ -414,7 +425,7 @@ public class MokkiKriteerit extends JFrame {
 	public static Object[] vuodet() {
 		List<String> a = new ArrayList<>();
 		int vuosi = 2022;
-		for (int i=vuosi;i<=vuosi+5;i++)
+		for (int i=vuosi;i<=vuosi+7;i++)
 			a.add(Integer.toString(i));
 		return a.toArray();
 	}

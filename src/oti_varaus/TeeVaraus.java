@@ -22,7 +22,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,9 +90,9 @@ public class TeeVaraus extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("Asiakas:");
 		
-		JComboBox comboBox = new JComboBox();
+		JComboBox<Object> comboBox = new JComboBox<Object>();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		comboBox.setModel(new DefaultComboBoxModel(asiakasLista));
+		comboBox.setModel(new DefaultComboBoxModel<Object>(asiakasLista));
 		
 		JLabel lblNewLabel_3 = new JLabel("Mökki:");
 		
@@ -117,7 +116,7 @@ public class TeeVaraus extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("Varauspäivä:");
 		
 		txtPiv = new JTextField();
-		txtPiv.setText(formatDate(varausPaiva));
+		txtPiv.setText(MokkiKriteerit.s.format(varausPaiva));
 		txtPiv.setEditable(false);
 		txtPiv.setColumns(10);
 		
@@ -138,7 +137,7 @@ public class TeeVaraus extends JFrame {
 		
 		txtP = new JTextField();
 		if (!MokkiKriteerit.haeAlkuPaiva().before(varausPaiva))
-			txtP.setText(formatDate(MokkiKriteerit.haeAlkuPaiva()));
+			txtP.setText(MokkiKriteerit.s.format(MokkiKriteerit.haeAlkuPaiva()));
 		txtP.setEditable(false);
 		txtP.setColumns(10);
 		
@@ -147,7 +146,7 @@ public class TeeVaraus extends JFrame {
 		txtP_1 = new JTextField();
 		if (!MokkiKriteerit.haeLoppuPaiva().before(varausPaiva)
 				&& MokkiKriteerit.haeLoppuPaiva().after(MokkiKriteerit.haeAlkuPaiva()))
-			txtP_1.setText(formatDate(MokkiKriteerit.haeLoppuPaiva()));
+			txtP_1.setText(MokkiKriteerit.s.format(MokkiKriteerit.haeLoppuPaiva()));
 		txtP_1.setEditable(false);
 		txtP_1.setColumns(10);
 		
@@ -168,8 +167,8 @@ public class TeeVaraus extends JFrame {
 			}
 		});
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(omatPalvelut()));
+		JComboBox<Object> comboBox_1 = new JComboBox<Object>();
+		comboBox_1.setModel(new DefaultComboBoxModel<Object>(omatPalvelut()));
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -321,13 +320,6 @@ public class TeeVaraus extends JFrame {
 		return a;
 	}
 	
-	protected static String formatDate (Date i) {
-		SimpleDateFormat f = new SimpleDateFormat("dd.MM.yyy");
-		String a = f.format(i);
-		return a;
-		
-	}
-	
 	protected static void setMokki() {
 		if (MokinValinta.valinta >= 0) {
 			mokkiID = MokkiKriteerit.sopivatMokit.get(MokinValinta.valinta).getId();
@@ -335,22 +327,11 @@ public class TeeVaraus extends JFrame {
 		}
 	}
 	
-	/*
-
-	
-	protected static void setMokki() {
-		if (MokinValinta.valinta >= 0) {
-			mokkiID = sopivatMokit.get(MokinValinta.valinta).getId();
-			MokinValinta.valinta = -1;
-			txtA.setText("Mökki " + mokkiID);
-		}
-	}
-	
-	**/
-	
 	private void tallennaTiedot() {
-		Date alku = MokkiKriteerit.haeAlkuPaiva();
-		Date loppu = MokkiKriteerit.haeLoppuPaiva();
+		String varP = MokkiKriteerit.s.format(varausPaiva);
+		String vahP = varP;
+		String alku = MokkiKriteerit.s.format(MokkiKriteerit.haeAlkuPaiva());
+		String loppu = MokkiKriteerit.s.format(MokkiKriteerit.haeLoppuPaiva());
 		int id;
 		int maara;
 		
@@ -358,7 +339,7 @@ public class TeeVaraus extends JFrame {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        Statement st2 = con.createStatement();
-	        st.executeUpdate("Insert into varaus values('"+varausID+"','"+asiakasID+"','"+mokkiID+"','"+varausPaiva+"','"+varausPaiva+"','"+alku+"','"+loppu+"')");
+	        st.executeUpdate("Insert into varaus values('"+varausID+"','"+asiakasID+"','"+mokkiID+"','"+varP+"','"+vahP+"','"+alku+"','"+loppu+"')");
 	        
 	        for (int i = 0; i<Lisapalvelut.valitutPalvelut.size();i++) {
 	        	id = Lisapalvelut.valitutPalvelut.get(i).getId();
@@ -368,7 +349,9 @@ public class TeeVaraus extends JFrame {
 	        JOptionPane.showMessageDialog(null, "Varaus lisätty järjestelmään.");
 	        st.close();
 		}
-		catch (SQLException ex) {}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 		
 		setVisible(false);
 	}

@@ -173,7 +173,7 @@ public class Lisapalvelut extends JFrame {
 					.addContainerGap(30, Short.MAX_VALUE))
 		);
 		
-		JList list = new JList(palveluKuvaukset);
+		JList<String> list = new JList<String>(palveluKuvaukset);
 		scrollPane.setViewportView(list);
 		contentPane.setLayout(gl_contentPane);
 		

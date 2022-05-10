@@ -115,7 +115,7 @@ public class MokinValinta extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 		
-		JList list = new JList<String>(mokkiKuvaukset);
+		JList<String> list = new JList<String>(mokkiKuvaukset);
 		list.setVisibleRowCount(5);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);

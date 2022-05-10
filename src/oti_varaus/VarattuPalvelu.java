@@ -25,7 +25,7 @@ public class VarattuPalvelu {
 	
 	public String raportti() {
 		return pvm + ", varaus " + varaus_id + ": " + maara + "* " + nimi + 
-				" (" + id + "), " + hinta + "€";
+				" (" + id + "), " + String.format("%.2f", hinta) + "€";
 	}
 
 	/**
@@ -82,6 +82,20 @@ public class VarattuPalvelu {
 	 */
 	public void setHinta(double hinta) {
 		this.hinta = hinta;
+	}
+
+	/**
+	 * @return the nimi
+	 */
+	public String getNimi() {
+		return nimi;
+	}
+
+	/**
+	 * @param nimi the nimi to set
+	 */
+	public void setNimi(String nimi) {
+		this.nimi = nimi;
 	}
 	
 }
