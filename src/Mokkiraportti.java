@@ -25,21 +25,20 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import oti_varaus.MokkiKriteerit;
-import oti_varaus.VarattuPalvelu;
 import OTI_Projekti.Palveluntarjoaja;
 
 /**
  * 
  * @author ilta
  */
-public class Palveluraportti extends JFrame {
+public class Mokkiraportti extends JFrame {
 	
 	private static String alku;
 	private static String loppu;
 	private static List<Varaus> varaukset = new ArrayList<>();
-	private static List<VarattuPalvelu> palvelut = new ArrayList<>();
 	private static DefaultListModel<String> raportit = new DefaultListModel<>();
 	
 	private static JLabel lblNewLabel_2 = new JLabel("Yhteensä: 0,00€");
@@ -59,13 +58,11 @@ public class Palveluraportti extends JFrame {
 	 */
 	public static void main(String[] args) {
 		haeRaportit();
-		VarattuPalvelu a = new VarattuPalvelu("", 0, 0, 0);
-		palvelut.add(a);
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Palveluraportti frame = new Palveluraportti();
+					Mokkiraportti frame = new Mokkiraportti();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,14 +74,14 @@ public class Palveluraportti extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Palveluraportti() {
+	public Mokkiraportti() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 508, 418);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("Raportti ostetuista palveluista");
+		JLabel lblNewLabel = new JLabel("Raportti varatuista mökeistä");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		
 		JLabel lblNewLabel_1 = new JLabel("Alkuajankohta:");
@@ -146,8 +143,8 @@ public class Palveluraportti extends JFrame {
 		JButton btnNewButton_1 = new JButton("Hae");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				varaukset = haeVaraukset();
-				palvelut = haePalvelut();
+				haeVaraukset();
+				haeMokkitiedot();
 				haeRaportit();
 			}
 		});
@@ -223,14 +220,24 @@ public class Palveluraportti extends JFrame {
 		scrollPane.setViewportView(list);
 	}
 	
-	private static List<Varaus> haeVaraukset() {
+	private static void haeVaraukset() {
 		varaukset.clear();
-		List<Varaus> varaukset = new ArrayList<>();
 		int id;
 		String pvm;
 		Date v_pvm;
+		int mokki_id;
+		
+		String alku;
+		String loppu;
+		Date v_alku;
+		Date v_loppu;
+		long aikaa;
+		int paivia;
+		
 		Date a = haeAlkuPaiva();
 		Date b = haeLoppuPaiva();
+		
+		int i = 0;
 		
 		try {
 	        Connection con=Palveluntarjoaja.getCon();
@@ -238,11 +245,22 @@ public class Palveluraportti extends JFrame {
 	        ResultSet resultSet = st.executeQuery("Select * from varaus order by vahvistus_pvm");
 	        while (resultSet.next()){
 	        	pvm = resultSet.getString("vahvistus_pvm");
+	        	alku = resultSet.getString("varattu_alkupvm");
+	        	loppu = resultSet.getString("varattu_loppupvm");
 	        	try {
 					v_pvm = MokkiKriteerit.s.parse(pvm);
+					v_alku = MokkiKriteerit.s.parse(alku);
+					v_loppu = MokkiKriteerit.s.parse(loppu);
 					if (!v_pvm.before(a) && !v_pvm.after(b)) {
 			        	id = resultSet.getInt("varaus_id");
 			        	varaukset.add(new Varaus(id, v_pvm));
+			        	mokki_id = resultSet.getInt("mokki_mokki_id");
+			        	aikaa = v_loppu.getTime() - v_alku.getTime();
+			        	paivia = (int) TimeUnit.DAYS.convert(aikaa, TimeUnit.MILLISECONDS);
+			        	varaukset.get(i).setPvm_s(pvm);
+			        	varaukset.get(i).setMokki_id(mokki_id);
+			        	varaukset.get(i).setPaivia(paivia);
+			        	i++;
 		        	}
 				} catch (ParseException e) {
 					JOptionPane.showMessageDialog(null, "Virhe päivämäärien kääntämisessä.");
@@ -255,62 +273,46 @@ public class Palveluraportti extends JFrame {
 		catch (SQLException ex) {
 			JOptionPane.showMessageDialog(null, "Virhe varausten haussa.");
 		}
-		
-		return varaukset;
 	}
 	
-	private static List<VarattuPalvelu> haePalvelut() {
-		List<VarattuPalvelu> palvelut = new ArrayList<>();
-		String n, pvm;
-		int id, vid, m;
+	private static void haeMokkitiedot() {
+		String n;
 		double h;
-		int i = 0;
+		int id;
 		
 		if (!varaukset.isEmpty()) {
-			try {
-		        Connection con=Palveluntarjoaja.getCon();
-		        Statement st = con.createStatement();
-		        ResultSet resultSet = st.executeQuery("Select * from varauksen_palvelut order by varaus_id");
-		        while (resultSet.next()){
-		        	vid = resultSet.getInt("varaus_id");
-		        	for (Varaus v : varaukset) {
-		        		if (v.getId()==vid) {
-		        			pvm = MokkiKriteerit.s.format(v.getPvm());
-		        			id = resultSet.getInt("palvelu_id");
-		        			m = resultSet.getInt("lkm");
-		        			Statement st2 = con.createStatement();
-		    		        ResultSet resultSet2 = st2.executeQuery("Select * from palvelu order by palvelu_id");
-		    		        while (resultSet2.next()){
-		    		        	if (id == resultSet2.getInt("palvelu_id")) {
-		    		        		n = resultSet2.getString("nimi");
-		    		        		h = resultSet2.getDouble("hinta");
-		    		        		palvelut.add(new VarattuPalvelu(n, id, m, h));
-		    		            	palvelut.get(i).setPvm(pvm);
-		    		            	palvelut.get(i).setVaraus_id(vid);
-		    		            	i++;
-		    		        	}}}}}
-		        resultSet.close();
-		        st.close();
-			}
+			for (int i=0; i<varaukset.size();i++) {
+				try {
+			        Connection con=Palveluntarjoaja.getCon();
+			        Statement st = con.createStatement();
+			        ResultSet resultSet = st.executeQuery("Select * from mokki order by mokki_id");
+			        	while (resultSet.next()){
+			        		id = resultSet.getInt("mokki_id");
+			        		if (varaukset.get(i).getMokki_id()==id) {
+			        			n = resultSet.getString("mokkinimi");
+			        			h = resultSet.getDouble("hinta");
+			        			varaukset.get(i).setMokki_nimi(n);
+			        			varaukset.get(i).setHinta(h);
+			        			System.out.println("varauksen " +i+ " mökki haettu");
+			        			}}
+			        resultSet.close();
+			        st.close();
+				}
 			catch (SQLException ex) {
 				JOptionPane.showMessageDialog(null, "Virhe palvelulistan teossa.");
-			}
-		}
-		
-		return palvelut;
-	}
+			}}}}
 	
 	private static void haeRaportit() {
 		raportit.clear();
 		double tulot = 0;
-		for (VarattuPalvelu p : palvelut) {
-			if (!p.getNimi().equals("")) {
-				raportit.addElement(p.raportti());
-				tulot = tulot + p.getHinta();
+		if (!varaukset.isEmpty()) {
+			for (Varaus v : varaukset) {
+				raportit.addElement(v.toString());
+				tulot = tulot + v.getHinta();
 			}
 		}
 		if (raportit.isEmpty())
-			raportit.addElement("Ei ostettuja palveluja valitulla ajanjaksolla.");
+			raportit.addElement("Ei tehtyjä mökkivarauksia valitulla ajanjaksolla.");
 		lblNewLabel_2.setText("Yhteensä: " + String.format("%.2f", tulot) + "€");
 		list = new JList<String>(raportit);
 	}

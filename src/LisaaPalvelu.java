@@ -15,8 +15,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
@@ -130,16 +128,16 @@ public class LisaaPalvelu extends JFrame {
 			}
 		});
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(alueet));
+		JComboBox<Object> comboBox = new JComboBox<Object>();
+		comboBox.setModel(new DefaultComboBoxModel<Object>(alueet));
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//toimiAlueID = comboBox.getSelectedIndex();
 			};
 		});
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(tyypit));
+		JComboBox<Object> comboBox_1 = new JComboBox<Object>();
+		comboBox_1.setModel(new DefaultComboBoxModel<Object>(tyypit));
 		comboBox_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				palveluTyyppi = comboBox_1.getSelectedIndex();
@@ -220,18 +218,18 @@ public class LisaaPalvelu extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 	
-	private static Object[] alueLista () {
+	public static Object[] alueLista () {
 		List<String> alueet = new ArrayList<>();
-		alueet.add("");
 		String alue;
+		int i;
 		try {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        ResultSet resultSet = st.executeQuery("Select * from alue order by alue_id");
-	        while (resultSet.next())
-	        {
+	        while (resultSet.next()) {
+	        i = resultSet.getInt("alue_id");
 	        alue = resultSet.getString("nimi");
-	        alueet.add(alue);
+	        alueet.add(i, alue);
 	        }
 
 	        resultSet.close();
@@ -239,8 +237,10 @@ public class LisaaPalvelu extends JFrame {
 		}
 		catch (SQLException ex) {}
 		
-		Object[] a = alueet.toArray();
-		return a;
+		if (alueet.size()==0)
+			alueet.add("");
+		
+		return alueet.toArray();
 	}
 	
 	private static String[] tyyppiLista () {
@@ -254,6 +254,7 @@ public class LisaaPalvelu extends JFrame {
 			Statement st=con.createStatement();
 			st.executeUpdate("Insert into palvelu values('"+palveluID+"','"+toimiAlueID+"','"+palveluNimi+"','"+palveluTyyppi+"','"+kuvaus+"','"+hinta+"','"+alv+"')");
 			JOptionPane.showMessageDialog(null, "Palvelu lisätty järjestelmään.");
+	        st.close();
 		}
 		catch(SQLException ex) {
 			JOptionPane.showMessageDialog(null, "Palvelun lisäys epäonnistui.");
