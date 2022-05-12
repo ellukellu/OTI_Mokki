@@ -261,11 +261,13 @@ public class TeeVaraus extends JFrame {
 		String nimi;
 		String en;
 		String sn;
+		
 		int i;
 		try {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        ResultSet resultSet = st.executeQuery("Select * from asiakas order by asiakas_id");
+	        asiakkaat.add(0, "");
 	        while (resultSet.next()){
 	        	i = resultSet.getInt("asiakas_id");
 		        en = resultSet.getString("etunimi");
@@ -279,20 +281,19 @@ public class TeeVaraus extends JFrame {
 		catch (SQLException ex) {
 			System.out.println("Virhe! asiakas");
 		}
-		if (asiakkaat.size()==0)
-			asiakkaat.add("");
 		
 		return asiakkaat.toArray();
 	}
 	
 	private static Object[] haeAlueLista() {
 		ArrayList<String> alueet = new ArrayList<>();
-		String alue;
+		String alue;	
 		int i;
 		try {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        ResultSet resultSet = st.executeQuery("Select * from alue order by alue_id");
+	        alueet.add(0, "");
 	        while (resultSet.next()) {
 	        	i = resultSet.getInt("alue_id");
 		        alue = resultSet.getString("nimi");
@@ -302,8 +303,6 @@ public class TeeVaraus extends JFrame {
 	        st.close();
 		}
 		catch (SQLException ex) {}
-		if (alueet.size()==0)
-			alueet.add("");
 		
 		return alueet.toArray();
 	}
@@ -339,8 +338,7 @@ public class TeeVaraus extends JFrame {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        Statement st2 = con.createStatement();
-	        st.executeUpdate("Insert into varaus values('"+varausID+"','"+asiakasID+"','"+mokkiID+"','"+varP+"','"+vahP+"','"+alku+"','"+loppu+"')");
-	        
+	        st.executeUpdate("Insert into varaus values('"+varausID+"','"+asiakasID+"','"+mokkiID+"','"+varP+"','"+vahP+"','"+alku+"','"+loppu+"')");	        
 	        for (int i = 0; i<Lisapalvelut.valitutPalvelut.size();i++) {
 	        	id = Lisapalvelut.valitutPalvelut.get(i).getId();
 	        	maara = Lisapalvelut.valitutPalvelut.get(i).getMaara();

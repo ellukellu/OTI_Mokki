@@ -250,21 +250,24 @@ public class MokkiKriteerit extends JFrame {
 											.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))
 										.addPreferredGap(ComponentPlacement.UNRELATED)
 										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-											.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-												.addGap(18)
-												.addComponent(comboBox_3, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-												.addGap(18)
-												.addComponent(comboBox_4_1, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
-											.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-												.addGap(18)
-												.addComponent(comboBox_2, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-												.addGap(18)
-												.addComponent(comboBox_4, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 											.addComponent(lblNewLabel)
 											.addComponent(comboBox_4_2, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-											.addComponent(comboBox_4_3, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))))
+											.addComponent(comboBox_4_3, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+											.addGroup(gl_contentPane.createSequentialGroup()
+												.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+													.addComponent(comboBox_1, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+													.addComponent(comboBox, 0, 48, Short.MAX_VALUE))
+												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+													.addGroup(gl_contentPane.createSequentialGroup()
+														.addPreferredGap(ComponentPlacement.UNRELATED)
+														.addComponent(comboBox_2, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(ComponentPlacement.UNRELATED)
+														.addComponent(comboBox_4, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+													.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+														.addGap(10)
+														.addComponent(comboBox_3, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(ComponentPlacement.UNRELATED)
+														.addComponent(comboBox_4_1, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)))))))
 								.addGap(105)))))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -345,6 +348,7 @@ public class MokkiKriteerit extends JFrame {
 	        Connection con=Palveluntarjoaja.getCon();
 	        Statement st = con.createStatement();
 	        ResultSet resultSet = st.executeQuery("Select * from varaus order by varaus_id");
+	        varatutMokit.add(0, 9999);
 	        while (resultSet.next()) {
 	        	alku = resultSet.getString("varattu_alkupvm");
 	        	loppu = resultSet.getString("varattu_loppupvm");
